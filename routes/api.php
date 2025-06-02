@@ -4,15 +4,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OwnerController;
 use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
-Route::apiResource('owners', OwnerController::class);
+Route::prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class,'register']);
 
-// Rotas de imóveis
-Route::apiResource('properties', PropertyController::class);
+    Route::post('login', [AuthController::class,'login']);
 
-// Filtro de imóveis (busca por cidade, valor mínimo e máximo)
-Route::get('properties/search/filter', [PropertyController::class, 'search']);
+    Route::post('logout', [AuthController::class,'logout']);
+});
+
+Route::apiResource('owners', OwnerController::class)->middleware('auth:sanctum');
+
+Route::apiResource('properties', PropertyController::class)->middleware('auth:sanctum');
+
+Route::get('properties/search/filter', [PropertyController::class, 'search'])->middleware('auth:sanctum');
+
