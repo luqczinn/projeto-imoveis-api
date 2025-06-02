@@ -25,7 +25,7 @@ class UpdatePropertyRequest extends FormRequest
             "title" => "sometimes|required",
             "city" => "sometimes|required",
             "phone" => "sometimes|required",
-            "owner_id" => "required|exists:owners,id",
+            "owner_id" => "sometimes|required|exists:owners,id",
             "price" => "sometimes|required",
         ];
     }
