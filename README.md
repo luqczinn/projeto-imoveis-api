@@ -39,7 +39,7 @@ cd projeto-imoveis-api
 docker-compose up -d
 
 # Acessar o container da aplicação
-docker exec -it laravel-app bash
+docker exec -it laravel_app bash
 
 # Instalar dependências
 composer install
