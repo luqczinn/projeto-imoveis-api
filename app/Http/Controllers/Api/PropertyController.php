@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\OwnerRepositoryContract;
 use App\Contracts\PropertyRepositoryContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PropertyFilterRequest;
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendOwnerMail;
+
 class PropertyController extends Controller
 {
-    protected $properties;
+    protected $properties, $owners;
 
-    public function __construct(PropertyRepositoryContract $properties)
+    public function __construct(PropertyRepositoryContract $properties, OwnerRepositoryContract $owners)
     {
         $this->properties = $properties;
+        $this->owners = $owners;
     }
     public function index()
     {
@@ -26,6 +30,13 @@ class PropertyController extends Controller
         $input = $request->validated();
 
         $property = $this->properties->create($input);
+
+        $owner = $property->owner;
+        #logica p enviar email
+        SendOwnerMail::dispatch($owner->email, [
+            'title' => $property->title,
+            'city' => $property->city
+        ]);
         return response()->json($property, 201);
     }
 

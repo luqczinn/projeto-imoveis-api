@@ -1,0 +1,1 @@
+{{$data['title']}} da cidade de {{$data['city']}} vinculado ao seu nome!
