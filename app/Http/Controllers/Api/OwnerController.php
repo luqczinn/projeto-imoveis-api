@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\OwnerRepositoryContract;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreOwnerRequest;
 use App\Http\Requests\UpdateOwnerRequest;
-use App\Models\Owner;
 class OwnerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    protected $owners;
+
+    public function __construct(OwnerRepositoryContract $owners)
+    {
+        $this->owners = $owners;
+    }
+
     public function index()
     {
-        return Owner::all();
+        return $this->owners->all();
     }
 
     /**
@@ -23,13 +31,13 @@ class OwnerController extends Controller
     public function store(StoreOwnerRequest $request) 
     {
         $input = $request->validated();
-        $owner = Owner::create($input);
+        $owner = $this->owners->create($input);
         return response()->json($owner, 201);
     }
 
     public function show(string $id)
     {
-        $owner = Owner::find($id);
+        $owner = $this->owners->getById($id);
 
         if (!$owner) {
             return response()->json(['message' => 'Proprietário não encontrado!'], 404);
@@ -40,7 +48,7 @@ class OwnerController extends Controller
 
     public function update(UpdateOwnerRequest $request, string $id) 
     {
-        $owner = Owner::find($id);
+        $owner = $this->owners->getById($id);
 
         if (!$owner) {
             return response()->json(['message' => 'Proprietário não encontrado!'], 404);
@@ -54,7 +62,7 @@ class OwnerController extends Controller
 
     public function destroy(string $id)
     {
-        $owner = Owner::find($id);
+        $owner = $this->owners->getById($id);
 
         if (!$owner) {
             return response()->json(['message' => 'Proprietário não encontrado!'], 404);

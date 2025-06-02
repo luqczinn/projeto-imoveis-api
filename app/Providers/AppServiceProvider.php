@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Contracts\OwnerRepositoryContract;
+use App\Contracts\PropertyRepositoryContract;
+use App\Repositories\OwnerRepository;
+use App\Repositories\PropertyRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+        OwnerRepositoryContract::class,
+        OwnerRepository::class
+        );
+
+        $this->app->bind(
+        PropertyRepositoryContract::class,
+        PropertyRepository::class
+        );
+        
     }
 
     /**
@@ -19,6 +32,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
     }
 }
