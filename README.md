@@ -44,6 +44,9 @@ docker exec -it laravel_app bash
 # Instalar dependências
 composer install
 
+#Copie o .env do exemplo
+cp .env.example .env
+
 # Gerar chave da aplicação
 php artisan key:generate
 
